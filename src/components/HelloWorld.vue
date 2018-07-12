@@ -6,7 +6,9 @@
       check out the
       <a href="https://cli.vuejs.org" target="_blank">vue-cli documentation</a>.
     </p>
-    <FeedWindow></FeedWindow>
+    <div class="feedCont">
+      <FeedWindow></FeedWindow>
+    </div>
   </div>
 </template>
 
@@ -43,5 +45,10 @@ li {
 }
 a {
   color: #42b983;
+}
+.feedCont{
+  width:80%;
+  height:100%;
+  background-color:pink;
 }
 </style>

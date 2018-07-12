@@ -9,9 +9,9 @@
     <form
       :style="{zIndex:zIndex + 1}"
       @click="isFocused=true">
-
       <ImageUploadMulti @err="erroralert" @chosen="ctx => images = ctx"></ImageUploadMulti>
       <ImageUploadSingle @err="erroralert" @chosen="ctx => image = ctx"></ImageUploadSingle>
+      We're testing feed window
     </form>
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .Shadow{
-    position:fixed;
+    position:absolute;
     background-color:rgba(0, 0, 0, .4);
     top: 0;
     left: 0;
@@ -75,7 +75,7 @@ export default {
     background-color:white;
     position:relative;
     z-index:100; // 1 layer higher than Shadow
-    width:50%;
+    width:100%;
     border:solid 1px gray;
   }
 
