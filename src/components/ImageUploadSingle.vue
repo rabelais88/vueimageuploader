@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="!imagebuff">
+      <!-- TODO: change button type & class-->
       <button @click="addImage">image upload(Single)</button>
       <input type="file"
         accept="image/*"
@@ -24,7 +25,7 @@
                   stroke-width="2"/>
           </svg>
         </div>
-        <img :src="imagebuff" />
+        <img :src="imagebuff.src" />
       </div>
     </div>
   </div>
@@ -38,7 +39,19 @@ const defaultData = {
 const props = {
   allowed: {
     type: String,
-    default: 'jpeg,jpg,gif,png',
+    default: 'jpeg,jpg,png,bmp',
+  },
+  maxSize: {
+    type: Number,
+    default: 1024 * 1024 * 2, // maximum of 2mb
+  },
+  maxWidth: {
+    type: Number,
+    default: 2000,
+  },
+  maxHeight: {
+    type: Number,
+    default: 2000,
   },
 };
 
@@ -65,16 +78,37 @@ export default {
       const fileType = file.type.split('/')[1];
       if (this.allowedTypes.includes(fileType)) {
         const reader = new FileReader();
-        reader.onload = (e) => {
-          this.imagebuff = e.target.result;
-        };
+        reader.onload = this.onImageLoad;
         reader.readAsDataURL(file);
       } else {
-        this.$emit('err', 'file type error');
+        // TODO: use error code
+        this.errEmit('err', 'file type error');
       }
+    },
+    onImageLoad(e) {
+      this.imagebuff = new Image();
+      this.imagebuff.src = e.target.result;
+      const isValidated = this.validate(e.target.result.length);
+      if (!isValidated) {
+        this.imagebuff = '';
+      }
+    },
+    validate(fileSize) {
+      if (fileSize > this.maxSize) {
+        // TODO: use error code
+        this.errEmit('file size is too big');
+        return false;
+      } else if (this.imagebuff.width > this.maxWidth || this.imagebuff.height > this.maxHeight) {
+        this.errEmit('image is too large');
+        return false;
+      }
+      return true;
     },
     removeImage() {
       this.imagebuff = '';
+    },
+    errEmit(errmsg) {
+      this.$emit('err', errmsg);
     },
   },
   watch: {
@@ -85,7 +119,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-  /* temporary styles */
+  // TODO: remove this temporary classes
   img{
     width:100%;
     height:100%;
